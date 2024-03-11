@@ -1,0 +1,97 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    name: 🎯 Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+
+    
+  ftp-deploy:
+    name: 🎉 Deploy
+    environment: 
+      name: server-production
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v4
+
+      
+    - name: Use Node.js ${{ matrix.node-version }} build project
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+
+
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.SERVER_HOST }}
+        username: liaoqinwei
+        password: ${{ secrets.SERVER_PASSWORD }}
+        port: 21
+        protocol: ftp
+        local-dir: ./
+        server-dir: /opt/blog/
+        exclude: |
+          **/.git*
+          **/.git*/**
+          /node_modules/**
+          /.nuxt/**
+        timeout: 180000
+
+        
+    - name: Start server
+      uses: appleboy/ssh-action@v1.0.3
+      env:
+        DATABASE_USER: ${{ secrets.DATABASE_USER }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+        DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      with:
+        # SSH host address.
+        host: ${{ secrets.SERVER_HOST }}
+        # SSH port number.
+        port: 22
+        # SSH username.
+        username: liaoqinwei
+        # SSH password.
+        password: ${{ secrets.SERVER_PASSWORD }}
+        envs: DATABASE_USER,DATABASE_PASSWORD,DATABASE_HOST,DATABASE_PORT,DATABASE_NAME
+        # Commands to be executed.
+        script: npx cross-env DATABASE_URL=postgresql://$DATABASE_USER:$DATABASE_PASSWORD@$DATABASE_HOST:$DATABASE_PORT/$DATABASE_NAME?schema=public npm run deploy
+        
