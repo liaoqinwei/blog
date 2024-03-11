@@ -69,8 +69,8 @@ jobs:
         exclude: |
           **/.git*
           **/.git*/**
-          /node_modules/**
-          /.nuxt/**
+          ./node_modules/**
+          ./.nuxt/**
         timeout: 180000
 
         
