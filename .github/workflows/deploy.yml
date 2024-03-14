@@ -95,5 +95,6 @@ jobs:
         # Commands to be executed.
         script: | 
           cd /opt/blog 
+          echo $PATH
           cross-env DATABASE_URL=postgresql://$DATABASE_USER:$DATABASE_PASSWORD@$DATABASE_HOST:$DATABASE_PORT/$DATABASE_NAME?schema=public npm run deploy
         
