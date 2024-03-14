@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "test": "vitest",
-    "deploy": "ts-node --project  tsconfig.node.json --esm ./script/deploy.ts"
+    "deploy": "node ./script/deploy.js"
   },
   "dependencies": {
     "@prisma/client": "^5.10.2",
