@@ -3,6 +3,8 @@ import process from 'node:process'
 import * as util from 'node:util'
 
 const {DATABASE_URL} = process.env
+
+console.log("DATABASE_URL",DATABASE_URL)
 const execPromise = util.promisify(exec);
 
 
