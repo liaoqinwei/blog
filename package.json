@@ -9,8 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "test": "vitest",
-    "cypress:open": "cypress open",
-    "deploy": "ts-node --project  tsconfig.node.json --esm ./script/deploy.ts"
+    "deploy": "node ./script/deploy.js"
   },
   "dependencies": {
     "@prisma/client": "^5.10.2",
@@ -24,7 +23,6 @@
     "@vue/test-utils": "^2.4.4",
     "cross-env": "^7.0.3",
     "happy-dom": "^13.6.2",
-    "kleur": "^4.1.5",
     "playwright-core": "^1.42.1",
     "prisma": "^5.10.2",
     "ts-node": "^10.9.2",

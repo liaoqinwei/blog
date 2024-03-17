@@ -1,9 +1,10 @@
 import {exec} from 'node:child_process'
 import process from 'node:process'
 import * as util from 'node:util'
-import kleur from 'kleur';
 
 const {DATABASE_URL} = process.env
+
+console.log("DATABASE_URL",DATABASE_URL)
 const execPromise = util.promisify(exec);
 
 
@@ -28,14 +29,14 @@ async function main() {
      await execPromise('npx prisma migrate deploy')
      await execPromise('npx prisma generate')
 
-    console.log(kleur.green('数据库同步成功'))
+    console.log('数据库同步成功')
   } catch (e) {
     throw new Error(`prisma 同步数据库失败 ${e}`)
   }
 
   try {
     const {stdout} = await execPromise(`npx cross-env DATABASE_URL=${DATABASE_URL} pm2 restart ./ecosystem.config.cjs --env production`)
-    console.log(kleur.green('启动成功'))
+    console.log('启动成功')
     console.log(stdout)
   } catch (e) {
     console.log(e)
