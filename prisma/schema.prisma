@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -14,19 +14,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+model Article {
+  id          Int           @id @default(autoincrement())
+  name        String        @map("文章的名字") @db.VarChar(64)
+  description String        @map("文章的描述") @db.VarChar(128)
+  content     String        @map("文章的内容") @db.Text
+  createAt    DateTime      @map("文章的创建时间")
+  modifyAt    DateTime      @map("最后一次修改时间")
+  banner      String        @map("文章的封面图片")
+  visits      Int           @default(0) @map("访问量")
+  types       ArticleType[]
 }
 
-model Post {
+model ArticleType {
   id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+  name      String  @map("文章类型")
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId Int
 }
