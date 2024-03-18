@@ -1,7 +1,13 @@
 <template>
-  <div>
     <NuxtLayout>
-      <NuxtPage/>
+      <VApp>
+        <NuxtPage/>
+      </VApp>
     </NuxtLayout>
-  </div>
 </template>
+<script setup lang="ts">
+</script>
+
+<style lang="sass">
+@use "~/assets/style/font.scss"
+</style>
