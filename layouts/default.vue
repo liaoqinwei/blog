@@ -1,13 +1,31 @@
 <template>
   <v-layout>
     <v-app-bar scroll-behavior="hide">
-      <v-app-bar-title>Liaoqinwei</v-app-bar-title>
+      <template v-slot:prepend v-if="route.fullPath!=='/'">
+        <v-btn icon="mdi-chevron-left" @click="()=>router.back()">
+        </v-btn>
+      </template>
+
+      <v-app-bar-title>{{ title }}</v-app-bar-title>
+
       <template v-slot:append>
-        <v-menu>
+        <v-menu location="bottom">
           <template v-slot:activator="{ props }">
             <v-app-bar-nav-icon v-bind="props"/>
           </template>
-         123
+
+          <v-list>
+            <v-list-item :key="item.text"
+                         :to="item.href"
+                         :value="item"
+                         v-for="item in navList">
+              <template v-slot:prepend>
+                <v-icon :icon="`mdi-${item.icon}`"/>
+              </template>
+
+              <v-list-item-title v-text="item.text"></v-list-item-title>
+            </v-list-item>
+          </v-list>
         </v-menu>
       </template>
     </v-app-bar>
@@ -19,5 +37,16 @@
     </v-main>
   </v-layout>
 </template>
+
 <script setup lang="ts">
+const router = useRouter()
+const route = useRoute()
+
+const title = computed(()=>route.meta.title || 'Liaoqinwei')
+
+const navList = [
+  {text: '技术博客', icon: 'code-less-than', href: '/blog'},
+  {text: '生活分享', icon: '', href: '/blog'},
+  {text: 'xxxx', icon: '', href: '/blog'},
+]
 </script>
