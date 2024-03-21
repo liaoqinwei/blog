@@ -31,10 +31,10 @@
     </v-app-bar>
     <v-main>
       <slot></slot>
-      <v-footer class="align-self-center text-center justify-center">
-        <c-link href="http://beian.miit.gov.cn/">渝ICP备2021006885号-1</c-link>
-      </v-footer>
     </v-main>
+    <v-footer app class="align-self-center text-center justify-center">
+      <c-link href="http://beian.miit.gov.cn/">渝ICP备2021006885号-1</c-link>
+    </v-footer>
   </v-layout>
 </template>
 
